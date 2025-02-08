@@ -7,6 +7,8 @@
  * @param {Function} params.onImageUrlChange - Функция, вызываемая при изменении URL изображения.
  *                                            Принимает один аргумент - новый URL изображения или пустую строку.
  */
+import { uploadImage } from "../api.js";
+
 export function renderUploadImageComponent({ element, onImageUrlChange }) {
   /**
    * URL текущего изображения.
@@ -57,6 +59,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         // Загружаем изображение с помощью API
         uploadImage({ file }).then(({ fileUrl }) => {
           imageUrl = fileUrl; // Сохраняем URL загруженного изображения
+          console.log(imageUrl);
           onImageUrlChange(imageUrl); // Уведомляем о изменении URL изображения
           render(); // Перерисовываем компонент с новым состоянием
         });

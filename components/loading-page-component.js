@@ -7,6 +7,7 @@
  * @param {Object} params.user - Объект пользователя, содержащий данные о текущем авторизованном пользователе (если он есть).
  * @param {Function} params.goToPage - Функция для навигации по страницам.
  */
+import { renderHeaderComponent } from "./header-component.js";
 export function renderLoadingPageComponent({ appEl, user, goToPage }) {
   /**
    * HTML-разметка страницы загрузки.
@@ -27,7 +28,7 @@ export function renderLoadingPageComponent({ appEl, user, goToPage }) {
    * Рендеринг заголовка с использованием компонента `renderHeaderComponent`.
    * Передаются данные пользователя и функция навигации.
    */
-  renderHeaderComponent({
+    renderHeaderComponent({
     user,
     element: document.querySelector(".header-container"),
     goToPage,

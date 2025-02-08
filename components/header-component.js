@@ -5,6 +5,13 @@
  * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться заголовок.
  * @returns {HTMLElement} Возвращает элемент заголовка после рендеринга.
  */
+import {
+  ADD_POSTS_PAGE,
+  AUTH_PAGE,
+  POSTS_PAGE,
+} from "../routes.js";
+import { user, goToPage } from "../index.js";
+import { logout } from "../index.js";
 export function renderHeaderComponent({ element }) {
   /**
    * Рендерит содержимое заголовка.

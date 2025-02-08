@@ -7,6 +7,11 @@
  * @param {Function} params.setUser - Функция, вызываемая при успешной авторизации или регистрации.
  *                                    Принимает объект пользователя в качестве аргумента.
  */
+import { renderHeaderComponent } from "./header-component.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
+import { registerUser } from "../api.js";
+import { loginUser } from "../api.js";
+
 export function renderAuthPageComponent({ appEl, setUser }) {
   /**
    * Флаг, указывающий текущий режим формы.
@@ -158,7 +163,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
     // Обработка переключения режима (вход ↔ регистрация)
     document.getElementById("toggle-button").addEventListener("click", () => {
-      isLoginMode = !isLoginMode;
+      isLoginMode = false;
       renderForm(); // Перерисовываем форму с новым режимом
     });
   };
