@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, postsHost, token } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -15,6 +15,7 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+
 
 export let user = getUserFromLocalStorage();
 export let page = null;
@@ -112,11 +113,32 @@ const renderApp = () => {
       onAddPostClick({ description, imageUrl }) {
         // @TODO: реализовать добавление поста в API
         console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
-      },
-    });
-  }
+       // Отправка поста на сервер
+       fetch(postsHost, {
+        method: 'POST',
+        headers: {
 
+          'Authorization': `Bearer ${token}`, // добавляем токен авторизации, если он есть
+        },
+        body: JSON.stringify({ description, imageUrl }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ошибка при добавлении поста');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Пост добавлен:', data);
+        goToPage(POSTS_PAGE); // Возвращаемся на страницу постов после успешного добавления
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+        // Можно добавить уведомление пользователю об ошибке
+      });
+    },
+  });
+}
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
