@@ -20,10 +20,10 @@ export function renderPostsPageComponent({ appEl }) {
               </div>
               <div class="post-likes">
                 <button data-post-id="${post.id}" class="like-button">
-                ${post.likes.length > 0  ? '<img src="./assets/images/like-active.svg">' : '<img src="./assets/images/like-not-active.svg">'}
+                ${post.liked  ? '<img src="./assets/images/like-active.svg">' : '<img src="./assets/images/like-not-active.svg">'}
                 </button>
                 <p class="post-likes-text">
-                  Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : '0'}</strong>
+                  Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : `${post.user.name}`}</strong>
                   ${post.likes.length > 1 ? 'и еще ' + (post.likes.length - 1) : ''}
                 </p>
               </div>
@@ -32,7 +32,7 @@ export function renderPostsPageComponent({ appEl }) {
                 ${post.description}
               </p>
               <p class="post-date">
-                19 минут назад
+                ${post.createdAt}
               </p>
             </li>
           </ul>

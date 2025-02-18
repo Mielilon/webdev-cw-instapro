@@ -5,9 +5,9 @@ import { token } from "../api.js";
 
 export function renderUserPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
-  let userPosts = [];
 
-  const appHtml = userPosts.map((post) => {
+
+  const appHtml = posts.map((post) => {
     return `
      
             <li class="post">
@@ -40,16 +40,16 @@ const userHtml = `
  <div class="page-container">
         <div class="header-container"></div>
         
-            ${token && userPosts[0] ? `
+            ${token && posts[0] ? `
             <div class="posts-user-header">
-                <img src="${userPosts[0].user.imageUrl}" class="posts-user-header__user-image">
-                <p class="posts-user-header__user-name">${userPosts[0].user.name}</p>
+                <img src="${posts[0].user.imageUrl}" class="posts-user-header__user-image">
+                <p class="posts-user-header__user-name">${posts[0].user.name}</p>
             </div>` : ""}
-            ${userPosts.length === 0 ? "Постов нет" : ""}
+            ${posts.length === 0 ? "Постов нет" : ""}
            
            <ul class="posts">
                 
-                ${userPosts}
+                ${appHtml}
             </ul>
             
         </div>`;
@@ -60,9 +60,10 @@ const userHtml = `
                 goToPage(USER_POSTS_PAGE, {
                     userId: header.dataset.userId,
                 });
+                appEl.innerHTML = userHtml;
             });
         }
-    
+        
         renderHeaderComponent({
             element: document.querySelector(".header-container"),
         });
