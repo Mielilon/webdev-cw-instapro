@@ -1,6 +1,6 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
+const personalKey = "daria-2025";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
@@ -67,3 +67,10 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+
+/*  export function logout() {
+  // Logic for logging out the user, like clearing user data or redirecting
+  console.log("User has logged out");
+  // Redirect to auth page or reset the state
+  goToPage(AUTH_PAGE);
+}  */
