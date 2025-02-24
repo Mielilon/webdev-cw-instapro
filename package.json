@@ -1,0 +1,20 @@
+{
+  "name": "webdev-cw-instapro",
+  "version": "1.0.0",
+  "description": "MVP социальной сети для обмена фотографиями",
+  "homepage": "https://github.com/Koshelev00/webdev-cw-instapro#readme",
+  "bugs": {
+    "url": "https://github.com/Koshelev00/webdev-cw-instapro/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koshelev00/webdev-cw-instapro.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
