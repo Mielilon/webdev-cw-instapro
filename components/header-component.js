@@ -1,6 +1,5 @@
 import { AUTH_PAGE, ADD_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
-import { goToPage } from "../index.js";
-/* import { logout } from "../api.js"; */
+import { goToPage, logout, user } from "../index.js";
 
 /**
  * Компонент заголовка страницы.
@@ -9,12 +8,7 @@ import { goToPage } from "../index.js";
  * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться заголовок.
  * @returns {HTMLElement} Возвращает элемент заголовка после рендеринга.
  */
-function logout() {
-  // Логика выхода, например, очистка данных пользователя
-  console.log("Пользователь вышел из системы");
-  goToPage(AUTH_PAGE);
-}
-export function renderHeaderComponent({ element, user }) {
+export function renderHeaderComponent({ element }) {
   /**
    * Рендерит содержимое заголовка.
    */
@@ -63,15 +57,7 @@ export function renderHeaderComponent({ element, user }) {
    * Обработчик клика по кнопке "Выйти".
    * Если кнопка существует (т.е. пользователь авторизован), вызывает функцию `logout`.
    */
-  /* element.querySelector(".logout-button")?.addEventListener("click", logout);  */
-
-  const logoutButton = element.querySelector(".logout-button");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", (event) => {
-      event.preventDefault(); // Останавливает другие возможные действия при клике
-      logout(); // Вызываем функцию выхода
-    });
-  }
+  element.querySelector(".logout-button")?.addEventListener("click", logout);
 
   return element;
 }

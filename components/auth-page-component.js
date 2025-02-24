@@ -1,7 +1,8 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
-import { registerUser } from "../api.js";
-import { loginUser } from "../api.js";
+import { registerUser, loginUser } from "../api.js";
+/* import { POSTS_PAGE } from "../routes.js"; // Добавляем переход на главную страницу после входа
+import { goToPage } from "../index.js"; */
 
 /**
  * Компонент страницы авторизации.
