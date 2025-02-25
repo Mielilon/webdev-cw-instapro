@@ -3,8 +3,9 @@
 import { posts } from "./index.js";
 const personalKey = "prod";
 const baseHost = "https://wedev-api.sky.pro";
+// let userid= data.userId
 export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
-export let token = '78c0b8dcb8dg5c5c5c5g6g5g5k5o5s5w606g38o3co3ds3bo3cc3bo3bc3k37k3cc3bo3c83d03bo3c43k37s3cc3b43bk3c03cg3c03cw3co3bc3c03do'
+export let token = "";
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -70,21 +71,42 @@ export function uploadImage({ file }) {
   });
 }
 
+
 export function userPosts(userId) {
-  // userId = posts.user.id
-  return fetch(postsHost + `/user-posts/${userId}`, {
+
+  return fetch(`${postsHost}/user-posts/${userId.userId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
     .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
       return response.json();
     })
     .then((data) => {
-      console.log(posts);
-      
+      console.log(data);
       return data.posts;
-      
+    });
+}
+
+export function likes(userId) {
+  return fetch(`${postsHost}/${userId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+   .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+   .then((data) => {
+      return data.posts;
     });
 }

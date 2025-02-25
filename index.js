@@ -70,25 +70,34 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === USER_POSTS_PAGE) {
       // @@TODO: реализовать получение постов юзера из API
+      page = LOADING_PAGE;
+      renderApp();
       console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      userPosts (data.userId);
-      renderUserPostsPageComponent(data.userId, posts)
-      return renderApp();
+      console.log(data.userId);
+      // let userId = data.userId;
+      return userPosts({ userId:data.userId })
+        .then((userPost) => {
+          page = USER_POSTS_PAGE;
+          posts = userPost;
+          renderApp();
+        })
+        .catch((error) => {
+          console.error(error);
+          goToPage(USER_POSTS_PAGE);
+        });
     }
-    posts = newPosts;
-    page = newPage;
-    renderApp();
-    console.log (posts)
-
-    return;
   }
 
-  throw new Error("страницы не существует");
+  page = newPage;
+  renderApp();
+
+  return;
 };
 
-const renderApp = () => {
+//   throw new Error("страницы не существует");
+// };
+
+export const renderApp = () => {
   const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -117,32 +126,31 @@ const renderApp = () => {
       onAddPostClick({ description, imageUrl }) {
         // @TODO: реализовать добавление поста в API
         console.log("Добавляю пост...", { description, imageUrl });
-       // Отправка поста на сервер
-       fetch(postsHost, {
-        method: 'POST',
-        headers: {
-
-          'Authorization': `Bearer ${token}`, // добавляем токен авторизации, если он есть
-        },
-        body: JSON.stringify({ description, imageUrl }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ошибка при добавлении поста');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Пост добавлен:', data);
-        goToPage(POSTS_PAGE); // Возвращаемся на страницу постов после успешного добавления
-      })
-      .catch(error => {
-        console.error('Ошибка:', error);
-        // Можно добавить уведомление пользователю об ошибке
-      });
-    },
-  });
-}
+        // Отправка поста на сервер
+        fetch(postsHost, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`, // добавляем токен авторизации, если он есть
+          },
+          body: JSON.stringify({ description, imageUrl }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Ошибка при добавлении поста");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Пост добавлен:", data);
+            goToPage(POSTS_PAGE); // Возвращаемся на страницу постов после успешного добавления
+          })
+          .catch((error) => {
+            console.error("Ошибка:", error);
+            // Можно добавить уведомление пользователю об ошибке
+          });
+      },
+    });
+  }
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
@@ -153,7 +161,41 @@ const renderApp = () => {
     // @TODO: реализовать страницу с фотографиями отдельного пользвателя
     // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
     // return renderUserPostsPageComponent({ appEl});
+    return renderUserPostsPageComponent({ appEl });
   }
 };
-// renderUserPostsPageComponent()
+
+document.addEventListener('DOMContentLoaded', () => {
+  const likeBtns = document.querySelectorAll('.like-button');
+
+  likeBtns.forEach(likeBtn => {
+    likeBtn.addEventListener('click', () => {
+      console.log('Лайкнул пост...');
+      console.log(likeBtn);
+
+      // Отправка лайка на сервер
+      fetch(`${postsHost}/likes/${posts.id}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+        },
+        body: JSON.stringify({ postId: posts.id }), 
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Ошибка при лайке поста');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Лайк поста добавлен:', data);
+      })
+      .catch((error) => {
+        console.error('Ошибка:', error);
+      });
+    });
+  });
+});
+
+
 goToPage(POSTS_PAGE);

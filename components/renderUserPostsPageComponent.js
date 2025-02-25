@@ -6,13 +6,16 @@ import { token } from "../api.js";
 export function renderUserPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
 
-
-  const appHtml = posts.map((post) => {
-    return `
+  const appHtml = posts
+    .map(
+      (post) =>
+        `
      
             <li class="post">
               <div class="post-header" data-user-id="${post.user.id}">
-                  <img src="${post.user.imageUrl}" class="post-header__user-image">
+                  <img src="${
+                    post.user.imageUrl
+                  }" class="post-header__user-image">
                   <p class="post-header__user-name">${post.user.name}</p>
               </div>
               <div class="post-image-container">
@@ -20,11 +23,21 @@ export function renderUserPostsPageComponent({ appEl }) {
               </div>
               <div class="post-likes">
                 <button data-post-id="${post.id}" class="like-button">
-                ${post.likes.length > 0  ? '<img src="./assets/images/like-active.svg">' : '<img src="./assets/images/like-not-active.svg">'}
+                ${
+                  post.likes.length > 0
+                    ? '<img src="./assets/images/like-active.svg">'
+                    : '<img src="./assets/images/like-not-active.svg">'
+                }
                 </button>
                 <p class="post-likes-text">
-                  Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : '0'}</strong>
-                  ${post.likes.length > 1 ? 'и еще ' + (post.likes.length - 1) : ''}
+                  Нравится: <strong>${
+                    post.likes.length > 0 ? post.likes[0].name : "0"
+                  }</strong>
+                  ${
+                    post.likes.length > 1
+                      ? "и еще " + (post.likes.length - 1)
+                      : ""
+                  }
                 </p>
               </div>
               <p class="post-text">
@@ -35,16 +48,21 @@ export function renderUserPostsPageComponent({ appEl }) {
                 19 минут назад
               </p>
             </li>`
-  }).join('');
-const userHtml = `
+    )
+    .join("");
+  const userHtml = `
  <div class="page-container">
         <div class="header-container"></div>
         
-            ${token && posts[0] ? `
+            ${
+              token && posts[0]
+                ? `
             <div class="posts-user-header">
                 <img src="${posts[0].user.imageUrl}" class="posts-user-header__user-image">
                 <p class="posts-user-header__user-name">${posts[0].user.name}</p>
-            </div>` : ""}
+            </div>`
+                : ""
+            }
             ${posts.length === 0 ? "Постов нет" : ""}
            
            <ul class="posts">
@@ -53,19 +71,20 @@ const userHtml = `
             </ul>
             
         </div>`;
+  appEl.innerHTML = userHtml;
 
-  
-        for (let header of document.querySelectorAll(".post-header")) {
-            header.addEventListener("click", () => {
-                goToPage(USER_POSTS_PAGE, {
-                    userId: header.dataset.userId,
-                });
-                appEl.innerHTML = userHtml;
-            });
-        }
-        
-        renderHeaderComponent({
-            element: document.querySelector(".header-container"),
-        });
-    }
-    
+  for (let header of document.querySelectorAll(".post-header")) {
+    header.addEventListener("click", () => {
+      goToPage(USER_POSTS_PAGE, {
+        userId: header.dataset.userId,
+      
+      });
+
+      
+    });
+  }
+
+  renderHeaderComponent({
+    element: document.querySelector(".header-container"),
+  });
+}
