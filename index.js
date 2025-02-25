@@ -164,35 +164,35 @@ export const renderApp = () => {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  let likeBtn = document.querySelectorAll('.like-button');
+// document.addEventListener('DOMContentLoaded', () => {
+//   let likeBtn = document.querySelectorAll('.like-button');
 
 
-    likeBtn.addEventListener('click', () => {
-      console.log('Лайкнул пост...');
-      console.log(likeBtn);
+//     likeBtn.addEventListener('click', () => {
+//       console.log('Лайкнул пост...');
+//       console.log(likeBtn);
 
-      // Отправка лайка на сервер
-      fetch(`${postsHost}/${posts.id}/like`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`, 
-        },
-        body: JSON.stringify({ postId: posts.id }), 
-      })
-      .then((response) => {
+//       // Отправка лайка на сервер
+//       fetch(`${postsHost}/${posts.id}/like`, {
+//         method: 'POST',
+//         headers: {
+//           'Authorization': `Bearer ${token}`, 
+//         },
+//         body: JSON.stringify({ postId: posts.id }), 
+//       })
+//       .then((response) => {
         
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error('Ошибка:', error);
-      });
-    });
+//         return response.json();
+//       })
+//       .then((data) => {
+//         console.log(data);
+//       })
+//       .catch((error) => {
+//         console.error('Ошибка:', error);
+//       });
+//     });
   
-});
+// });
 
 
 goToPage(POSTS_PAGE);

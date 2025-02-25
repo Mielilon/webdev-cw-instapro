@@ -1,6 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
+import { likes } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
@@ -51,5 +52,13 @@ export function renderPostsPageComponent({ appEl }) {
         userId: userEl.dataset.userId,
       });
     });
+  }
+
+
+  for (let likeButton of document.querySelectorAll(".like-button")) {
+    likeButton.addEventListener("click", () => {
+      let postId = likeButton.getAttribute('data-post-id')
+      likes(postId)
+})
   }
 }
