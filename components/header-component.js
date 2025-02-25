@@ -1,3 +1,6 @@
+import { user, goToPage, } from "../index.js";
+import { AUTH_PAGE, ADD_POSTS_PAGE } from "../routes.js";
+import { logout } from "../index.js";
 /**
  * Компонент заголовка страницы.
  * Этот компонент отображает шапку страницы с логотипом, кнопкой добавления постов/входа и кнопкой выхода (если пользователь авторизован).
@@ -9,6 +12,7 @@ export function renderHeaderComponent({ element }) {
   /**
    * Рендерит содержимое заголовка.
    */
+
   element.innerHTML = `
   <div class="page-header">
       <h1 class="logo">instapro</h1>
@@ -36,8 +40,10 @@ export function renderHeaderComponent({ element }) {
     .querySelector(".add-or-login-button")
     .addEventListener("click", () => {
       if (user) {
+        console.log(user);
         goToPage(ADD_POSTS_PAGE);
       } else {
+        console.log(user);
         goToPage(AUTH_PAGE);
       }
     });

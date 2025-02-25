@@ -1,3 +1,4 @@
+import { uploadImage, } from "../api.js";
 /**
  * Компонент загрузки изображения.
  * Этот компонент позволяет пользователю загружать изображение и отображать его превью.
@@ -55,7 +56,8 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         labelEl.textContent = "Загружаю файл...";
         
         // Загружаем изображение с помощью API
-        uploadImage({ file }).then(({ fileUrl }) => {
+        uploadImage({ file })
+        .then(({ fileUrl }) => {
           imageUrl = fileUrl; // Сохраняем URL загруженного изображения
           onImageUrlChange(imageUrl); // Уведомляем о изменении URL изображения
           render(); // Перерисовываем компонент с новым состоянием
