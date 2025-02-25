@@ -166,9 +166,9 @@ export const renderApp = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  let likeBtns = document.querySelectorAll('.like-button');
+  let likeBtn = document.querySelectorAll('.like-button');
 
-  likeBtns.forEach(likeBtn => {
+  likeBtn.forEach(likeBtn => {
     likeBtn.addEventListener('click', () => {
       console.log('Лайкнул пост...');
       console.log(likeBtn);
