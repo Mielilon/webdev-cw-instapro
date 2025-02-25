@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(likeBtn);
 
       // Отправка лайка на сервер
-      fetch(`${postsHost}/likes/${posts.id}`, {
+      fetch(`${postsHost}/${posts.id}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`, 
@@ -182,13 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ postId: posts.id }), 
       })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Ошибка при лайке поста');
-        }
+        
         return response.json();
       })
       .then((data) => {
-        console.log('Лайк поста добавлен:', data);
+        console.log(data);
       })
       .catch((error) => {
         console.error('Ошибка:', error);
