@@ -160,7 +160,6 @@ export const renderApp = () => {
   if (page === USER_POSTS_PAGE) {
     // @TODO: реализовать страницу с фотографиями отдельного пользвателя
     // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    // return renderUserPostsPageComponent({ appEl});
     return renderUserPostsPageComponent({ appEl });
   }
 };
@@ -168,7 +167,7 @@ export const renderApp = () => {
 document.addEventListener('DOMContentLoaded', () => {
   let likeBtn = document.querySelectorAll('.like-button');
 
-  likeBtn.forEach(likeBtn => {
+
     likeBtn.addEventListener('click', () => {
       console.log('Лайкнул пост...');
       console.log(likeBtn);
@@ -192,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Ошибка:', error);
       });
     });
-  });
+  
 });
 
 
