@@ -1,5 +1,5 @@
 import { user, goToPage, } from "../index.js";
-import { AUTH_PAGE, ADD_POSTS_PAGE } from "../routes.js";
+import { AUTH_PAGE, ADD_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { logout } from "../index.js";
 /**
  * Компонент заголовка страницы.

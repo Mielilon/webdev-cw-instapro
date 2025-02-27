@@ -1,8 +1,9 @@
 
 import {renderUploadImageComponent} from "./upload-image-component.js";
-
-
-
+import { newPost } from "../api.js";
+import { renderPostsPageComponent } from "./posts-page-component.js";
+import { goToPage } from "../index.js";
+import { POSTS_PAGE } from "../routes.js";
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
     // @TODO: Реализовать страницу добавления поста
@@ -20,25 +21,29 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     
     appEl.innerHTML = appHtml;
     const fileUploadLabel = document.querySelector('.file-upload-label');
-    const newImageUrl = document.querySelector('.url')
-     console.log(newImageUrl.files[0])
+    let imageUrl ='';
 
   if (fileUploadLabel) {
      renderUploadImageComponent({
        element: fileUploadLabel,
        onImageUrlChange(newImageUrl) {
-         imageUrl = newImageUrl;
-       },
+        imageUrl = newImageUrl
+      },
+      
     });
    } 
+  
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
+      newPost({
         description: document.querySelector('.text-description').value,
-        imageUrl: newImageUrl.value
+        imageUrl: imageUrl,
       });
+      goToPage(POSTS_PAGE)
+      // renderPostsPageComponent(
+      //  {appEl: document.querySelector('#app')}
+      // )
     });
   };
-  /* renderUploadImageComponent({ , onImageUrlChange })  */
-  render();
- 
+  
+  render(); 
 }

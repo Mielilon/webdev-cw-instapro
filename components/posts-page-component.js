@@ -1,8 +1,9 @@
 
-import { USER_POSTS_PAGE } from "../routes.js";
+import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, } from "../index.js";
-/* import { getPosts } from "../api.js"; */
+import { postLike, disLike } from "../api.js";
+
 
 export function renderPostsPageComponent({ appEl }) {
   // @TODO: реализовать рендер постов из api
@@ -24,8 +25,8 @@ export function renderPostsPageComponent({ appEl }) {
                       <img class="post-image" src=${post.imageUrl}>
                     </div>
                     <div class="post-likes">
-                      <button data-post-id=${post.id} class="like-button">
-                        <img src="./assets/images/like-active.svg">
+                      <button data-post-id=${post.id} data-is-Liked=${post.isLiked} class="like-button">
+                        <img src=${post.isLiked ? './assets/images/like-active.svg' : './assets/images/like-not-active.svg'}>
                       </button>
                       <p class="post-likes-text">
                         Нравится: <strong>${post.likes.length}</strong>
@@ -55,11 +56,38 @@ export function renderPostsPageComponent({ appEl }) {
     element: document.querySelector(".header-container"),
   });
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
-      goToPage(USER_POSTS_PAGE, {
-        userId: userEl.dataset.userId,
+     for (let userEl of document.querySelectorAll(".post-header")) {
+      userEl.addEventListener("click", () => {
+        goToPage(USER_POSTS_PAGE, {
+          userId: userEl.dataset.userId,
+         
+        });
+       
       });
-    });
+    }  
+ 
+
+  for (let button of document.querySelectorAll('.like-button')) {
+    button.addEventListener('click', (e) => {
+      if (e.target.classList.contains('like-button')) {
+        let id = e.target.dataset.postId
+        let isLiked = e.target.dataset.isLiked
+        console.log('isLiked', isLiked)
+        
+        if (isLiked === 'true') {
+          disLike(id).then((user) => 
+          goToPage(POSTS_PAGE)
+        )
+        } else {
+          postLike(id).then((user) =>  goToPage(POSTS_PAGE))
+        }
+      }
+
+
+
+    })
   }
+
 }
+
+

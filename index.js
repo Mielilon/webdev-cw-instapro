@@ -1,6 +1,7 @@
-import { getPosts } from "./api.js";
+import { getPosts, getUserPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
+import { renderUserPostsPageComponents } from "./components/user-post-page-components.js";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -67,11 +68,14 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === USER_POSTS_PAGE) {
-      // @@TODO: реализовать получение постов юзера из API
+      getUserPosts(data.userId)
+      .then((response)=> response.json())
+      .then((data)=> {
+       page = USER_POSTS_PAGE;
+       posts = data.posts;
+       return renderApp();
+      })
       console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
     }
 
     page = newPage;
@@ -125,7 +129,8 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    renderUserPostsPageComponents({appEl})
+    /* appEl.innerHTML = "Здесь будет страница фотографий пользователя"; */
     return;
   }
 };
