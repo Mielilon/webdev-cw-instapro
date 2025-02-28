@@ -1,13 +1,13 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 import { posts } from "./index.js";
-import {getTokenFromLocalStorage } from "./helpers.js";
+
 const personalKey = "prod";
 const baseHost = "https://wedev-api.sky.pro";
 // let userid= data.userId
 export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
-debugger
-export let token = getTokenFromLocalStorage();
+
+export let token = ""
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -95,9 +95,28 @@ export function userPosts(userId) {
     });
 }
 
-export function likes(postId) {
-  debugger
+export function likess({postId, token}) {
+
   return fetch(`${postsHost}/${postId}/like`, {
+    method: "POST",
+    headers: {
+     
+      Authorization: token,
+    },
+  })
+   .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+   .then((data) => {
+      return data.posts;
+    });
+}
+export function disLikess({postId, token}) {
+
+  return fetch(`${postsHost}/${postId}/dislike`, {
     method: "POST",
     headers: {
      

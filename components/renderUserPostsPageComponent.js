@@ -2,11 +2,13 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 import { token } from "../api.js";
+import { user } from "../index.js";
 
 export function renderUserPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
-
+  debugger
   const appHtml = posts
+  
     .map(
       (post) =>
         `
@@ -23,8 +25,9 @@ export function renderUserPostsPageComponent({ appEl }) {
               </div>
               <div class="post-likes">
                 <button data-post-id="${post.id}" class="like-button">
+                
                 ${
-                  post.likes.length > 0
+                  post.likes.find((likes) => likes._id === user._id)
                     ? '<img src="./assets/images/like-active.svg">'
                     : '<img src="./assets/images/like-not-active.svg">'
                 }

@@ -17,12 +17,13 @@ import {
 } from "./helpers.js";
 import { userPosts } from "./api.js";
 import { renderUserPostsPageComponent } from "./components/renderUserPostsPageComponent.js";
+// import { likeBtn } from "./components/posts-page-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -163,7 +164,7 @@ export const renderApp = () => {
     return renderUserPostsPageComponent({ appEl });
   }
 };
-
+// likeBtn ()
 // document.addEventListener('DOMContentLoaded', () => {
 //   let likeBtn = document.querySelectorAll('.like-button');
 
