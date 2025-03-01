@@ -6,6 +6,7 @@ import { user } from "../index.js";
 import { renderUserPostsPageComponent } from "./renderUserPostsPageComponent.js";
 
 export function renderPostsPageComponent({ appEl }) {
+  debugger
   console.log("Актуальный список постов:", posts);
   const appHtml = posts
     .map((post) => {
@@ -72,6 +73,7 @@ export function renderPostsPageComponent({ appEl }) {
 export function likeBtn(appEl) {
   document.querySelectorAll(".like-button").forEach((likeButton) => {
     likeButton.addEventListener("click", async () => {
+      
       const postId = likeButton.getAttribute("data-post-id");
       console.log(likeButton);
       console.log(likeButton.innerHTML);
@@ -80,28 +82,29 @@ export function likeBtn(appEl) {
         likeButton.innerHTML.trim() ===
         '<img src="./assets/images/like-active.svg">'
       ) {
-        await disLikess({ postId, token: getToken() });
+        disLikess({ postId, token: getToken() });
         likeButton.innerHTML =
           '<img src="./assets/images/like-not-active.svg">';
       } else {
-        await likess({ postId, token: getToken() });
+        likess({ postId, token: getToken() });
         likeButton.innerHTML = '<img src="./assets/images/like-active.svg">';
       }
 
       // Получаем обновленный список постов
-      const newPosts = await getPosts({ token: getToken() });
+      debugger
+      const newPosts = getPosts({ token: getToken() });
       updatePosts(newPosts); // Использование функции обновления
-      if(USER_POSTS_PAGE) {
-      renderUserPostsPageComponent({appEl})
-      }else {
+      // if(USER_POSTS_PAGE) {
+      // renderUserPostsPageComponent({appEl})
+      // }else {
         
         renderPostsPageComponent({ appEl })
 
-      }
+      // }
     });
   });
 }
 export function updatePosts(newPosts) {
   posts.length = 0; // Очищаем текущий массив
-  posts.push(...newPosts); // Добавляем новые посты
+  posts.push(newPosts); // Добавляем новые посты
 }

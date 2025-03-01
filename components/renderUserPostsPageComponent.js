@@ -86,8 +86,8 @@ export function renderUserPostsPageComponent({ appEl }) {
 
       
     });
-    
-    likeBtn(appEl)
+
+    likeBtn()
 
   }
 
