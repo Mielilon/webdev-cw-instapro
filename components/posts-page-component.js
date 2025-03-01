@@ -1,9 +1,9 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
-import { disLikess, likess } from "../api.js";
-
+import { posts, goToPage, getToken} from "../index.js";
+import { disLikess, likess, getPosts } from "../api.js";
 import { user } from "../index.js";
+import { renderUserPostsPageComponent } from "./renderUserPostsPageComponent.js";
 
 export function renderPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
@@ -33,9 +33,7 @@ export function renderPostsPageComponent({ appEl }) {
                 </button>
                 <p class="post-likes-text">
                   Нравится: <strong>${
-                    post.likes.length > 0
-                      ? post.likes[0].name
-                      : `${post.user.name}`
+                    post.likes.length > 0 ? post.likes[0].name : post.user.name
                   }</strong>
                   ${
                     post.likes.length > 1
@@ -47,53 +45,63 @@ export function renderPostsPageComponent({ appEl }) {
               <p class="post-text">
                 <span class="user-name">${post.user.name}</span>
                 ${post.description}
-              </p>
-              <p class="post-date">
-                ${post.createdAt}
-              </p>
+                </p>
+              <p class="post-date">${post.createdAt}</p>
             </li>
           </ul>
       </div>`;
     })
     .join("");
-    http://127.0.0.1:5501/
+
   appEl.innerHTML = appHtml;
-  
 
-  
-
+  likeBtn(appEl);
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
+  document.querySelectorAll(".post-header").forEach((userEl) => {
     userEl.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
       });
     });
-  }
-  for (let likeButton of document.querySelectorAll(".like-button")) {
-    likeButton.addEventListener("click", () => {
-      let postId = likeButton.getAttribute("data-post-id");
-    console.log(likeButton)
-      console.log(likeButton.innerHTML);
-      // likess({ postId, token: getToken() });
-      if (likeButton.innerHTML.trim() === '<img src="./assets/images/like-active.svg">') {
-        disLikess({postId, token: getToken()});
-         likeButton.innerHTML = '<img src="./assets/images/like-not-active.svg">'
-      } else {
-        likess({ postId, token: getToken() });
-         likeButton.innerHTML = '<img src="./assets/images/like-active.svg">'
-      }
-      debugger
-      renderHeaderComponent()
-      renderPostsPageComponent({ appEl });
-    });
-  }
-  
+  });
 }
-export function likeBtn () {
 
+export function likeBtn(appEl) {
+  document.querySelectorAll(".like-button").forEach((likeButton) => {
+    likeButton.addEventListener("click", async () => {
+      const postId = likeButton.getAttribute("data-post-id");
+      console.log(likeButton);
+      console.log(likeButton.innerHTML);
+
+      if (
+        likeButton.innerHTML.trim() ===
+        '<img src="./assets/images/like-active.svg">'
+      ) {
+        await disLikess({ postId, token: getToken() });
+        likeButton.innerHTML =
+          '<img src="./assets/images/like-not-active.svg">';
+      } else {
+        await likess({ postId, token: getToken() });
+        likeButton.innerHTML = '<img src="./assets/images/like-active.svg">';
+      }
+
+      // Получаем обновленный список постов
+      const newPosts = await getPosts({ token: getToken() });
+      updatePosts(newPosts); // Использование функции обновления
+      if(USER_POSTS_PAGE) {
+      renderUserPostsPageComponent({appEl})
+      }else {
+        
+        renderPostsPageComponent({ appEl })
+
+      }
+    });
+  });
 }
-// assets/images/like-active.svg
+export function updatePosts(newPosts) {
+  posts.length = 0; // Очищаем текущий массив
+  posts.push(...newPosts); // Добавляем новые посты
+}

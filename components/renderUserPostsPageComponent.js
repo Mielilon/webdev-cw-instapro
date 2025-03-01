@@ -3,10 +3,11 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 import { token } from "../api.js";
 import { user } from "../index.js";
+import { likeBtn } from "./posts-page-component.js";
 
 export function renderUserPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts);
-  debugger
+
   const appHtml = posts
   
     .map(
@@ -85,6 +86,9 @@ export function renderUserPostsPageComponent({ appEl }) {
 
       
     });
+    
+    likeBtn(appEl)
+
   }
 
   renderHeaderComponent({
