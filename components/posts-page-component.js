@@ -1,110 +1,104 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken} from "../index.js";
-import { disLikess, likess, getPosts } from "../api.js";
-import { user } from "../index.js";
-import { renderUserPostsPageComponent } from "./renderUserPostsPageComponent.js";
+import { renewPosts, posts, goToPage } from '../index.js'
+// import { disLikess, likess, getPosts } from "../api.js";
+// import { user } from "../index.js";
+import { formatDistanceToNow } from "../node_modules/date-fns/formatDistanceToNow.js";
+import { ru } from "../node_modules/date-fns/locale/ru.js";
+import {  replaceSymbols  } from '../helpers.js'
+import { putLike } from '../api.js'
 
+// import { renderUserPostsPageComponent } from "./renderUserPostsPageComponent.js";
+export let userLiked = "";
 export function renderPostsPageComponent({ appEl }) {
-  debugger
+  
   console.log("Актуальный список постов:", posts);
-  const appHtml = posts
-    .map((post) => {
+  let listOfPosts = posts
+    .map((post, index) => {
+      let formatedCreatedAt = formatDistanceToNow(post.createdAt, {
+        locale: ru,
+      });
+
       return `
-      <div class="page-container">
-        <div class="header-container"></div>
-          <ul class="posts">
-            <li class="post">
-              <div class="post-header" data-user-id="${post.user.id}">
-                  <img src="${
-                    post.user.imageUrl
-                  }" class="post-header__user-image">
-                  <p class="post-header__user-name">${post.user.name}</p>
-              </div>
-              <div class="post-image-container">
-                <img class="post-image" src="${post.imageUrl}">
-              </div>
-              <div class="post-likes">
-                <button data-post-id="${post.id}" class="like-button">
-                ${
-                  post.likes.find((likes) => likes.id === user._id)
-                    ? '<img src="./assets/images/like-active.svg">'
-                    : '<img src="./assets/images/like-not-active.svg">'
-                }
-                </button>
-                <p class="post-likes-text">
-                  Нравится: <strong>${
-                    post.likes.length > 0 ? post.likes[0].name : post.user.name
-                  }</strong>
-                  ${
-                    post.likes.length > 1
-                      ? "и еще " + (post.likes.length - 1)
-                      : ""
-                  }
-                </p>
-              </div>
-              <p class="post-text">
-                <span class="user-name">${post.user.name}</span>
-                ${post.description}
-                </p>
-              <p class="post-date">${post.createdAt}</p>
-            </li>
-          </ul>
-      </div>`;
+     <li class="post">
+<div class="post-header" data-user-id="${post.user.id}">
+    <img src="${post.user.imageUrl}" class="post-header__user-image">
+    <p class="post-header__user-name">${replaceSymbols(post.user.name)}</p>
+</div>
+<div class="post-image-container">
+  <img class="post-image" src="${post.imageUrl}">
+</div>
+<div data-postid="${post.id}" class="post-likes">
+  <button  class="like-button">
+    <img data-likeimg=${post.isLiked} src=${
+        post.isLiked
+          ? "./assets/images/like-active.svg"
+          : "./assets/images/like-not-active.svg"
+      }>
+  </button>
+  <p class="post-likes-text">
+    Нравится: ${
+      post.likes.length === 0
+        ? post.likes.length
+        : `
+      <strong id='likes-${post.id}'>${
+            post.likes.length === 1
+              ? replaceSymbols(post.likes[0].name)
+              : `${replaceSymbols(post.likes[0].name)} и еще ${
+                  post.likes.length - 1
+                }`
+          }</strong>
+      `
+    }
+    
+
+  </p>
+</div>
+<p class="post-text">
+  <span class="user-name">${replaceSymbols(post.user.name)}</span>
+  ${post.description}
+</p>
+<p class="post-date">
+${formatedCreatedAt} назад
+</p>
+</li>`;
     })
     .join("");
 
+  const appHtml = `
+    <div class="page-container">
+    <div class="header-container"></div>
+    <ul class="posts">
+    ${listOfPosts}
+    </ul>
+  </div>`;
+
   appEl.innerHTML = appHtml;
 
-  likeBtn(appEl);
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
 
-  document.querySelectorAll(".post-header").forEach((userEl) => {
+  for (let userEl of document.querySelectorAll(".post-header")) {
     userEl.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
       });
     });
-  });
-}
+  }
 
-export function likeBtn(appEl) {
-  document.querySelectorAll(".like-button").forEach((likeButton) => {
-    likeButton.addEventListener("click", async () => {
-      
-      const postId = likeButton.getAttribute("data-post-id");
-      console.log(likeButton);
-      console.log(likeButton.innerHTML);
-
-      if (
-        likeButton.innerHTML.trim() ===
-        '<img src="./assets/images/like-active.svg">'
-      ) {
-        disLikess({ postId, token: getToken() });
-        likeButton.innerHTML =
-          '<img src="./assets/images/like-not-active.svg">';
-      } else {
-        likess({ postId, token: getToken() });
-        likeButton.innerHTML = '<img src="./assets/images/like-active.svg">';
-      }
-
-      // Получаем обновленный список постов
-      debugger
-      const newPosts = getPosts({ token: getToken() });
-      updatePosts(newPosts); // Использование функции обновления
-      // if(USER_POSTS_PAGE) {
-      // renderUserPostsPageComponent({appEl})
-      // }else {
-        
-        renderPostsPageComponent({ appEl })
-
-      // }
+  for (let likeEl of document.querySelectorAll(".post-likes")) {
+    let likeBtn = likeEl.querySelector(".like-button");
+    likeBtn.addEventListener("click", () => {
+      let like = likeEl.dataset.postid;
+      let status = posts.filter((post) => post.id === like)[0].isLiked;
+      putLike(like, status)
+        .then((data) => {
+          data ? renewPosts({ data }) : "";
+        })
+        .finally(() => {
+          return renderPostsPageComponent({ appEl });
+        });
     });
-  });
-}
-export function updatePosts(newPosts) {
-  posts.length = 0; // Очищаем текущий массив
-  posts.push(newPosts); // Добавляем новые посты
+  }
 }

@@ -1,59 +1,64 @@
-
-import { renderUploadImageComponent } from "./upload-image-component.js";
-import { renderHeaderComponent } from "./header-component.js";
-
+import { renderUploadImageComponent } from './upload-image-component.js'
+import { renderHeaderComponent } from './header-component.js'
+import { replaceSymbols } from '../helpers.js'
+import { goToPage } from '../index.js'
+import { POSTS_PAGE } from '../routes.js'
+import { renderPostsPageComponent } from './posts-page-component.js'
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
-  let imageUrl = '';  // Объявление переменной для URL изображения
+    const render = () => {
+        let imageUrl = ''
+        const appHtml = `
 
-  const render = () => {
-    const appHtml = `
       <div class="page-container">
-        <div class="header-container">
-          <div class="page-header">
-            <h1 class="logo">instapro</h1>
-            <button class="header-button add-or-login-button">
-              <div title="Добавить пост" class="add-post-sign"></div>
-            </button>
-            <button title="Алексей" class="header-button logout-button">Выйти</button>  
-          </div>
-        </div>
+        <div class="header-container"></div>
         <div class="form">
-          <h3 class="form-title">Добавить пост</h3>
-          <div class="form-inputs">
-            <div class="upload-image-container"></div>
-            <label>
-              Опишите фотографию:
-              <textarea class="input textarea" rows="4"></textarea>
-            </label>
-            <button class="button" id="add-button">Добавить</button>
-          </div>
+            <h3 class="form-title">Оставить комментарий&nbsp;Instapro</h3>
+            <div class="form-inputs">
+              <div class="file-upload-image-container"></div>
+              <input
+                type="textarea"
+                id="text-input"
+                class="input"
+                rows="5"
+                cols=""
+                33
+                placeholder="Введите комментарий"
+            />
+            <div class="form-error"></div>
+        </div>
+          <button class="button" id="add-button">Опубликовать</button>
         </div>
       </div>
-    `;
 
-    appEl.innerHTML = appHtml;
-    renderHeaderComponent({
-      element: document.querySelector(".header-container"),
-    });
+  `
 
-    // Инициализируем компонент загрузки изображения
-    const uploadImageContainer = appEl.querySelector(".upload-image-container");
-    renderUploadImageComponent({
-      element: uploadImageContainer,
-      onImageUrlChange(newImageUrl) {
-        imageUrl = newImageUrl; // Обновляем значение imageUrl
-      },
-    });
+        appEl.innerHTML = appHtml
+        const uploadDescription = document.getElementById('text-input')
+        const uploadImageContainer = app.querySelector(
+            '.file-upload-image-container'
+        )
 
-    document.getElementById("add-button").addEventListener("click", () => {
-      const description = document.querySelector(".textarea").value; // Получаем описание из textarea
-      onAddPostClick({
-        description: description,
-        imageUrl: imageUrl,
-      });
-    });
-  };
+        renderHeaderComponent({
+            element: document.querySelector('.header-container'),
+        })
+        if (uploadImageContainer) {
+            renderUploadImageComponent({
+                element: uploadImageContainer,
+                onImageUrlChange(newImageUrl) {
+                    imageUrl = newImageUrl
+                },
+            })
+        }
 
-  render(); // Вызываем рендер
-}
+        document.getElementById('add-button').addEventListener('click', () => {
+            onAddPostClick({
+                description: replaceSymbols(uploadDescription.value),
+                imageUrl: imageUrl,
+            })
+            renderPostsPageComponent({ appEl })
+            //goToPage(POSTS_PAGE)
+        })
+    }
 
+    render()
+  }

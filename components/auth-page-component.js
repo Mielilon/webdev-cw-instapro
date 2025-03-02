@@ -127,8 +127,8 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       } else {
         // Обработка регистрации
         const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
-        const password = document.getElementById("password-input").value;
+        const name = replaceSymbols(document.getElementById("name-input").value);
+        const password = replaceSymbols(document.getElementById("password-input").value);
 
         if (!name) {
           alert("Введите имя");
@@ -163,7 +163,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
     // Обработка переключения режима (вход ↔ регистрация)
     document.getElementById("toggle-button").addEventListener("click", () => {
-      isLoginMode = false;
+      isLoginMode = !isLoginMode
       renderForm(); // Перерисовываем форму с новым режимом
     });
   };
