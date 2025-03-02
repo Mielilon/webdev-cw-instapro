@@ -7,13 +7,14 @@ import { formatDistanceToNow } from "../node_modules/date-fns/formatDistanceToNo
 import { ru } from "../node_modules/date-fns/locale/ru.js";
 import {  replaceSymbols  } from '../helpers.js'
 import { putLike } from '../api.js'
-
+import {user} from '../index.js'
 // import { renderUserPostsPageComponent } from "./renderUserPostsPageComponent.js";
-export let userLiked = "";
+
 export function renderPostsPageComponent({ appEl }) {
-  
+  const userId = user ? user._id : null
   console.log("Актуальный список постов:", posts);
   let listOfPosts = posts
+  
     .map((post, index) => {
       let formatedCreatedAt = formatDistanceToNow(post.createdAt, {
         locale: ru,
@@ -30,11 +31,12 @@ export function renderPostsPageComponent({ appEl }) {
 </div>
 <div data-postid="${post.id}" class="post-likes">
   <button  class="like-button">
-    <img data-likeimg=${post.isLiked} src=${
-        post.isLiked
-          ? "./assets/images/like-active.svg"
-          : "./assets/images/like-not-active.svg"
-      }>
+  
+    <img data-likeimg=${post.id} class="like-button"
+        ${post.likes.find((likes) => likes.id === userId)
+          ? "<img src='./assets/images/like-active.svg'>"
+          : "<img src='./assets/images/like-not-active.svg'>"
+      }
   </button>
   <p class="post-likes-text">
     Нравится: ${
@@ -65,6 +67,7 @@ ${formatedCreatedAt} назад
     })
     .join("");
 
+
   const appHtml = `
     <div class="page-container">
     <div class="header-container"></div>
@@ -90,8 +93,11 @@ ${formatedCreatedAt} назад
   for (let likeEl of document.querySelectorAll(".post-likes")) {
     let likeBtn = likeEl.querySelector(".like-button");
     likeBtn.addEventListener("click", () => {
+  
       let like = likeEl.dataset.postid;
-      let status = posts.filter((post) => post.id === like)[0].isLiked;
+      let currentPost = posts.find(post => post.id === like);
+      if (currentPost) {
+        let status = currentPost.likes.some(like => like.id === userId);
       putLike(like, status)
         .then((data) => {
           data ? renewPosts({ data }) : "";
@@ -99,6 +105,8 @@ ${formatedCreatedAt} назад
         .finally(() => {
           return renderPostsPageComponent({ appEl });
         });
-    });
+      }
+    })
   }
 }
+

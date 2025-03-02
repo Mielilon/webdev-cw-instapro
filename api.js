@@ -1,6 +1,5 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-import { posts } from "./index.js";
 import {getToken } from "../index.js";
 
 const personalKey = "prod";
@@ -93,26 +92,26 @@ export function uploadImage({ file }) {
 }
 
 
-export function userPosts(userId) {
+// export function userPosts(userId) {
 
-  return fetch(`${postsHost}/user-posts/${userId.userId}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => {
-      if (response.status === 401) {
-        throw new Error("Нет авторизации");
-      }
+//   return fetch(`${postsHost}/user-posts/${userId.userId}`, {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   })
+//     .then((response) => {
+//       if (response.status === 401) {
+//         throw new Error("Нет авторизации");
+//       }
 
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-      return data.posts;
-    });
-}
+//       return response.json();
+//     })
+//     .then((data) => {
+//       console.log(data);
+//       return data.posts;
+//     });
+// }
 
 export function putLike(postId, status) {
   let token = getToken()
@@ -140,33 +139,3 @@ export function putLike(postId, status) {
           return false
       })
 }
-// return renderAddPostPageComponent({
-//   appEl,
-//   onAddPostClick({ description, imageUrl }) {
-//     // @TODO: реализовать добавление поста в API
-//     console.log("Добавляю пост...", { description, imageUrl });
-//     // Отправка поста на сервер
-//     fetch(postsHost, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${token}`, // добавляем токен авторизации, если он есть
-//       },
-//       body: JSON.stringify({ description, imageUrl }),
-//     })
-//       .then((response) => {
-//         if (!response.ok) {
-//           throw new Error("Ошибка при добавлении поста");
-//         }
-//         return response.json();
-//       })
-//       .then((data) => {
-//         console.log("Пост добавлен:", data);
-//         goToPage(POSTS_PAGE); // Возвращаемся на страницу постов после успешного добавления
-//       })
-//       .catch((error) => {
-//         console.error("Ошибка:", error);
-//         // Можно добавить уведомление пользователю об ошибке
-//       });
-//   },
-// });
-// }
