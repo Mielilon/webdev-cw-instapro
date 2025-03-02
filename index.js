@@ -1,8 +1,7 @@
-import { getPosts, addPost } from "./api.js";
-import { renderHeaderComponent } from "./components/header-component.js";
-import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
-import { renderAuthPageComponent } from "./components/auth-page-component.js";
-import { renderUserPostsPageComponent } from "./components/render-User-Posts-Page-Component.js";
+import { getPosts, addPost } from "./api";
+import { renderAddPostPageComponent } from "./components/add-post-page-component";
+import { renderAuthPageComponent } from "./components/auth-page-component";
+import { renderUserPostsPageComponent } from "./components/user-posts-page-component";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -24,6 +23,7 @@ export let posts = [];
 
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
+
   return token;
 };
 

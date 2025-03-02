@@ -6,7 +6,7 @@ export function getPosts({ token }) {
   return fetch(postsHost, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
     },
   })
     .then((response) => {
@@ -16,7 +16,6 @@ export function getPosts({ token }) {
       if (!response.ok) {
         throw new Error("Ошибка при получении постов");
       }
-
       return response.json();
     })
     .then((data) => {
@@ -24,6 +23,10 @@ export function getPosts({ token }) {
       return data.posts.map((post) => ({
         ...post,
         text: post.text || post.description,
+        isLiked: post.isLiked, // Берем актуальное значение с сервера
+        likes: {
+          counter: post.likes ? post.likes.counter : 0,
+        },
       }));
     });
 }
@@ -52,18 +55,12 @@ export function loginUser({ login, password }) {
       login,
       password,
     }),
-  })
-    .then((response) => {
-      if (response.status === 400) {
-        throw new Error("Неверный логин или пароль");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Сохраняем токен в localStorage
-      localStorage.setItem("authToken", data.token);
-      return data;
-    });
+  }).then((response) => {
+    if (response.status === 400) {
+      throw new Error("Неверный логин или пароль");
+    }
+    return response.json();
+  });
 }
 
 export function uploadImage({ file }) {
@@ -100,4 +97,36 @@ export function addPost({ description, imageUrl, token }) {
     }
     return response.json();
   });
+}
+
+export function setLike(postId, token) {
+  return fetch(`${postsHost}/${postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка при добавлении лайка");
+      }
+      return response.json();
+    })
+    .then((data) => data);
+}
+
+export function removeLike(postId, token) {
+  return fetch(`${postsHost}/${postId}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка при удалении лайка");
+      }
+      return response.json();
+    })
+    .then((data) => data);
 }
